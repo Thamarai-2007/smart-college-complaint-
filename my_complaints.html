@@ -1,207 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>My Complaints</title>
 
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f4f7fb;
-        }
-
-        .navbar {
-            background: #2563eb;
-            color: white;
-            padding: 18px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar h2 {
-            font-size: 24px;
-        }
-
-        .back {
-            color: white;
-            text-decoration: none;
-            background: #1e40af;
-            padding: 10px 18px;
-            border-radius: 8px;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
         }
 
         .container {
             max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: auto;
         }
 
-        .title {
+        .header {
+            background: #1f4e79;
+            color: white;
+            padding: 22px;
+            border-radius: 10px;
+        }
+
+        .top-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 18px 0;
+        }
+
+        .top-links a,
+        button {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #1f4e79;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .top-links .logout {
+            background: #dc3545;
+        }
+
+        .complaint,
+        .no-complaints {
             background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .title h1 {
-            color: #1e293b;
-            margin-bottom: 8px;
-        }
-
-        .title p {
-            color: #64748b;
-        }
-
-        .complaint {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 22px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .complaint h2 {
-            color: #1e293b;
-            margin-bottom: 12px;
-        }
-
-        .complaint p {
-            color: #475569;
-            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000012;
+            overflow-wrap: anywhere;
         }
 
         .category {
             display: inline-block;
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 6px 12px;
+            background: #e3efff;
+            color: #1f4e79;
+            padding: 7px 12px;
             border-radius: 20px;
-            font-size: 14px;
-            margin-bottom: 10px;
+        }
+
+        .complaint h2 {
+            color: #1f4e79;
         }
 
         .status {
             display: inline-block;
-            background: #fef3c7;
-            color: #92400e;
-            padding: 7px 14px;
-            border-radius: 20px;
-            font-weight: bold;
+            padding: 6px 10px;
+            background: #fff3cd;
+            border-radius: 5px;
         }
 
         .date {
-            color: #94a3b8 !important;
-            font-size: 14px;
+            color: #666;
+            font-size: 13px;
         }
 
-        .empty {
-            background: white;
-            padding: 40px;
-            text-align: center;
-            border-radius: 15px;
-            color: #64748b;
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .complaint-photo {
+            width: 150px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .feedback-section,
+        .saved-feedback {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background: #f8faff;
+            border: 1px solid #dce6f1;
+        }
+
+        .saved-feedback {
+            background: #e8f7ed;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .rating {
+            color: #e5a000;
+            font-size: 22px;
+        }
+
+        button:hover,
+        .top-links a:hover {
+            opacity: 0.9;
         }
 
         @media (max-width: 600px) {
-            .navbar {
-                padding: 15px 20px;
+            body {
+                padding: 12px;
             }
 
-            .container {
-                margin: 25px auto;
+            .header {
+                padding: 16px;
+            }
+
+            .complaint {
+                padding: 16px;
+            }
+
+            .complaint-photo {
+                width: 125px;
+                height: 100px;
             }
         }
     </style>
 </head>
 
 <body>
+<div class="container">
 
-    <div class="navbar">
-
-        <h2>🎓 Smart College</h2>
-
-        <a href="{{ url_for('dashboard') }}" class="back">
-            ← Dashboard
-        </a>
-
+    <!-- Page Header -->
+    <div class="header">
+        <h1>My Complaints</h1>
+        <p>View your complaints, photos, status, and feedback here.</p>
     </div>
 
+    <!-- Navigation -->
+    <div class="top-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
 
-    <div class="container">
+        <a href="{{ url_for('complaint') }}">New Complaint</a>
 
-        <div class="title">
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
 
-            <h1>📋 My Complaints</h1>
+    <!-- Complaints List -->
+    {% if complaints %}
 
-            <p>
-                View your submitted complaints and their current status.
-            </p>
+        {% for complaint in complaints %}
 
-        </div>
+            <div class="complaint">
 
+                <span class="category">
+                    {{ complaint["category"] }}
+                </span>
 
-        {% if complaints %}
-
-            {% for complaint in complaints %}
-
-                <div class="complaint">
-
-                    <span class="category">
-                        {{ complaint["category"] }}
-                    </span>
-
-                    <h2>
-                        {{ complaint["subject"] }}
-                    </h2>
-
-                    <p>
-                        <strong>Description:</strong>
-                        {{ complaint["description"] }}
-                    </p>
-
-                    <p>
-                        <strong>Status:</strong>
-
-                        <span class="status">
-                            {{ complaint["status"] }}
-                        </span>
-                    </p>
-
-                    <p class="date">
-                        Submitted: {{ complaint["created_at"] }}
-                    </p>
-
-                </div>
-
-            {% endfor %}
-
-        {% else %}
-
-            <div class="empty">
-
-                <h2>No Complaints Yet 📭</h2>
+                <h2>{{ complaint["subject"] }}</h2>
 
                 <p>
-                    You haven't submitted any complaints.
+                    <strong>Description:</strong>
+                    {{ complaint["description"] }}
                 </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span class="status">
+                        {{ complaint["status"] }}
+                    </span>
+                </p>
+
+                <p class="date">
+                    Submitted on: {{ complaint["created_at"] }}
+                </p>
+
+                <!-- Complaint Photos -->
+                {% if complaint["photos"] %}
+
+                    <h3>📷 Complaint Photos</h3>
+
+                    <div class="photo-gallery">
+
+                        {% for photo in complaint["photos"] %}
+
+                            <a
+                                href="{{ url_for('complaint_photo', photo_id=photo['id']) }}"
+                                target="_blank"
+                                rel="noopener noreferrer">
+
+                                <img
+                                    src="{{ url_for('complaint_photo', photo_id=photo['id']) }}"
+                                    alt="Complaint photo"
+                                    class="complaint-photo"
+                                    loading="lazy">
+
+                            </a>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <p>No photos were attached to this complaint.</p>
+
+                {% endif %}
+
+                <!-- Feedback Section -->
+                {% if complaint["status"] == "Resolved" %}
+
+                    {% if complaint["feedback_rating"] is not none %}
+
+                        <!-- Previously Submitted Feedback -->
+                        <div class="saved-feedback">
+
+                            <h3>✅ Your Feedback Has Been Submitted</h3>
+
+                            <p><strong>Rating:</strong></p>
+
+                            <div class="rating">
+
+                                {% for star in range(1, 6) %}
+
+                                    {% if star <= complaint["feedback_rating"] %}
+                                        ★
+                                    {% else %}
+                                        ☆
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </div>
+
+                            <p>
+                                <strong>Your Feedback:</strong>
+                                {{ complaint["feedback_message"] }}
+                            </p>
+
+                            <p class="date">
+                                {{ complaint["feedback_created_at"] }}
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <!-- Feedback Form -->
+                        <div class="feedback-section">
+
+                            <h3>⭐ Submit Your Feedback</h3>
+
+                            <p>
+                                Your complaint has been resolved.
+                                Please share your experience.
+                            </p>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('submit_feedback', complaint_id=complaint['id']) }}">
+
+                                <label for="rating-{{ complaint['id'] }}">
+                                    Rating
+                                </label>
+
+                                <select
+                                    id="rating-{{ complaint['id'] }}"
+                                    name="rating"
+                                    required>
+
+                                    <option value="">Select a rating</option>
+                                    <option value="5">5 - Excellent</option>
+                                    <option value="4">4 - Very Good</option>
+                                    <option value="3">3 - Good</option>
+                                    <option value="2">2 - Fair</option>
+                                    <option value="1">1 - Poor</option>
+
+                                </select>
+
+                                <label for="message-{{ complaint['id'] }}">
+                                    Feedback
+                                </label>
+
+                                <textarea
+                                    id="message-{{ complaint['id'] }}"
+                                    name="message"
+                                    placeholder="Write your feedback here..."
+                                    required></textarea>
+
+                                <button type="submit">
+                                    Submit Feedback
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        <strong>Feedback:</strong>
+                        You can leave feedback after the complaint is resolved.
+                    </p>
+
+                {% endif %}
 
             </div>
 
-        {% endif %}
+        {% endfor %}
 
-    </div>
+    {% else %}
 
+        <!-- No Complaints -->
+        <div class="no-complaints">
+
+            <h2>No Complaints Yet</h2>
+
+            <p>You have not submitted any complaints yet.</p>
+
+            <a href="{{ url_for('complaint') }}">
+                Submit Your First Complaint
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
 </body>
-
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,173 +9,281 @@
 
     <style>
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f4f7fb;
-        }
-
-        .navbar {
-            background: #2563eb;
-            color: white;
-            padding: 18px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar h2 {
-            font-size: 24px;
-        }
-
-        .back {
-            color: white;
-            text-decoration: none;
-            background: #1e40af;
-            padding: 10px 18px;
-            border-radius: 8px;
+            margin: 0;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
         }
 
         .container {
             max-width: 700px;
-            margin: 50px auto;
-            padding: 20px;
+            margin: 30px auto;
+        }
+
+        .header {
+            background: #1f4e79;
+            color: white;
+            padding: 25px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+        }
+
+        .header p {
+            margin: 0;
         }
 
         .form-box {
             background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .form-box h1 {
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-
-        .form-box p {
-            color: #64748b;
-            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #1e293b;
+            margin: 18px 0 8px;
             font-weight: bold;
         }
 
-        input,
+        input[type="text"],
+        textarea,
         select,
-        textarea {
+        input[type="file"] {
             width: 100%;
-            padding: 13px;
-            margin-bottom: 20px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 15px;
+            background: white;
         }
 
         textarea {
-            height: 140px;
+            min-height: 150px;
             resize: vertical;
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #2563eb;
+        .hint {
+            margin-top: 7px;
+            color: #666;
+            font-size: 13px;
         }
 
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button,
+        .back-link {
+            display: inline-block;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 15px;
             cursor: pointer;
         }
 
-        .submit-btn:hover {
-            background: #1d4ed8;
+        button {
+            background: #1f4e79;
+            color: white;
+        }
+
+        button:hover {
+            background: #163957;
+        }
+
+        .back-link {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        #photo-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        #photo-preview img {
+            width: 100px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .form-box {
+                padding: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="navbar">
-        <h2>🎓 Smart College</h2>
+<div class="container">
 
-        <a href="{{ url_for('dashboard') }}" class="back">
-            ← Dashboard
-        </a>
+    <div class="header">
+        <h1>📝 Submit Complaint</h1>
+        <p>Please provide the details of your complaint below.</p>
     </div>
 
-    <div class="container">
+    <div class="form-box">
 
-        <div class="form-box">
+        <form
+            method="POST"
+            action="{{ url_for('complaint') }}"
+            enctype="multipart/form-data"
+        >
 
-            <h1>📝 Submit Complaint</h1>
+            <!-- COMPLAINT SUBJECT -->
+            <label for="subject">Complaint Subject</label>
 
-            <p>
-                Please provide the details of your complaint below.
+            <input
+                type="text"
+                id="subject"
+                name="subject"
+                placeholder="Enter complaint subject"
+                maxlength="200"
+                required
+            >
+
+            <!-- COMPLAINT CATEGORY -->
+            <label for="category">Complaint Category</label>
+
+            <select id="category" name="category" required>
+                <option value="">-- Select Category --</option>
+                <option value="Academic">Academic</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Library">Library</option>
+                <option value="Transport">Transport</option>
+                <option value="Canteen">Canteen</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <!-- COMPLAINT DESCRIPTION -->
+            <label for="description">Complaint Description</label>
+
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe your complaint in detail..."
+                required
+            ></textarea>
+
+            <!-- PHOTO UPLOAD -->
+            <label for="photos">Upload Complaint Photos (Optional)</label>
+
+            <input
+                type="file"
+                id="photos"
+                name="photos"
+                accept=".jpg,.jpeg,.png,.webp"
+                multiple
+            >
+
+            <p class="hint">
+                Allowed formats: JPG, JPEG, PNG, WEBP.
+                Maximum size: 5 MB per photo.
             </p>
 
-            <form method="POST">
+            <div id="photo-preview"></div>
 
-                <label for="subject">Complaint Subject</label>
+            <!-- BUTTONS -->
+            <div class="button-row">
 
-                <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    placeholder="Enter complaint subject"
-                    required
-                >
-
-                <label for="category">Category</label>
-
-                <select id="category" name="category" required>
-
-                    <option value="">-- Select Category --</option>
-                    <option value="Academic">Academic</option>
-                    <option value="Hostel">Hostel</option>
-                    <option value="Library">Library</option>
-                    <option value="Transport">Transport</option>
-                    <option value="Canteen">Canteen</option>
-                    <option value="Infrastructure">Infrastructure</option>
-                    <option value="Other">Other</option>
-
-                </select>
-
-                <label for="description">Complaint Description</label>
-
-                <textarea
-                    id="description"
-                    name="description"
-                    placeholder="Describe your complaint..."
-                    required
-                ></textarea>
-
-                <button type="submit" class="submit-btn">
+                <button type="submit">
                     Submit Complaint
                 </button>
 
-            </form>
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="back-link"
+                >
+                    Back to Dashboard
+                </a>
 
-        </div>
+            </div>
+
+        </form>
 
     </div>
+
+</div>
+
+<script>
+    const photoInput = document.getElementById("photos");
+    const photoPreview = document.getElementById("photo-preview");
+
+    photoInput.addEventListener("change", function () {
+        photoPreview.innerHTML = "";
+
+        const files = Array.from(this.files);
+        let totalSize = 0;
+
+        for (const file of files) {
+            totalSize += file.size;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert(file.name + " exceeds the 5 MB limit.");
+                this.value = "";
+                photoPreview.innerHTML = "";
+                return;
+            }
+
+            if (file.size === 0) {
+                alert(file.name + " is empty.");
+                this.value = "";
+                photoPreview.innerHTML = "";
+                return;
+            }
+
+            if (![
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ].includes(file.type)) {
+                alert("Please select JPG, PNG or WEBP images only.");
+                this.value = "";
+                photoPreview.innerHTML = "";
+                return;
+            }
+
+            const image = document.createElement("img");
+            image.alt = "Selected complaint photo preview";
+            image.src = URL.createObjectURL(file);
+
+            image.onload = function () {
+                URL.revokeObjectURL(image.src);
+            };
+
+            photoPreview.appendChild(image);
+        }
+
+        if (totalSize > 30 * 1024 * 1024) {
+            alert("Total photo size must not exceed 30 MB.");
+            this.value = "";
+            photoPreview.innerHTML = "";
+        }
+    });
+</script>
 
 </body>
 </html>

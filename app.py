@@ -686,7 +686,7 @@ def staff_logout():
 @app.errorhandler(413)
 def file_too_large(error):
     return "Upload size 30 MB-ai thaanda koodadhu.", 413
-
+    
 
 # ==============================
 # RUN APPLICATION

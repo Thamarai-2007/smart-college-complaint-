@@ -529,6 +529,8 @@
 
                     <th>Category</th>
 
+                    <th>Photos</th>
+                    <th>Student Feedback</th>
                     <th>Status</th>
 
                     <th>Date</th>
@@ -603,6 +605,28 @@
                     <td>
                         {{ complaint["category"] }}
                     </td>
+
+                    <td>
+                        {% if complaint["photos"] %}
+                            {% for photo in complaint["photos"] %}
+                                <a href="{{ url_for('complaint_photo', photo_id=photo['id']) }}" target="_blank" rel="noopener">
+                                    Photo {{ loop.index }}
+                                </a><br>
+                            {% endfor %}
+                        {% else %}
+                            <span>None</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if complaint["feedback_rating"] %}
+                            <strong>{{ complaint["feedback_rating"] }}/5</strong><br>
+                            {{ complaint["feedback_message"] }}
+                        {% else %}
+                            <span>Not submitted</span>
+                        {% endif %}
+                    </td>
+
+
 
 
                     <!-- STATUS -->

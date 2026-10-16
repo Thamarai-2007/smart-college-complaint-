@@ -130,7 +130,7 @@
                 Please provide the details of your complaint below.
             </p>
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
 
                 <label for="subject">Complaint Subject</label>
 
@@ -165,6 +165,19 @@
                     placeholder="Describe your complaint..."
                     required
                 ></textarea>
+
+                <label for="photos">Attach Photos (optional)</label>
+                <input
+                    type="file"
+                    id="photos"
+                    name="photos"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    multiple
+                    style="margin-bottom: 8px;"
+                >
+                <small style="display:block;color:#64748b;margin:-2px 0 20px;">
+                    JPG, PNG, WEBP · Up to 5 MB per photo · You can select multiple photos.
+                </small>
 
                 <button type="submit" class="submit-btn">
                     Submit Complaint

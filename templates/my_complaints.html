@@ -105,6 +105,61 @@
             font-size: 14px;
         }
 
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0 18px;
+        }
+
+        .photo-gallery img {
+            width: 150px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feedback-box {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feedback-box label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .feedback-box select,
+        .feedback-box textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            margin-bottom: 10px;
+            font: inherit;
+        }
+
+        .feedback-box button {
+            border: 0;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            padding: 11px 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .feedback-note {
+            color: #64748b;
+            font-size: 14px;
+        }
+
         .empty {
             background: white;
             padding: 40px;
@@ -170,6 +225,17 @@
                         {{ complaint["description"] }}
                     </p>
 
+                    {% if complaint["photos"] %}
+                        <p><strong>Attached Photos:</strong></p>
+                        <div class="photo-gallery">
+                            {% for photo in complaint["photos"] %}
+                                <a href="{{ url_for('complaint_photo', photo_id=photo['id']) }}" target="_blank" rel="noopener">
+                                    <img src="{{ url_for('complaint_photo', photo_id=photo['id']) }}" alt="Complaint photo">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <p>
                         <strong>Status:</strong>
 
@@ -181,6 +247,32 @@
                     <p class="date">
                         Submitted: {{ complaint["created_at"] }}
                     </p>
+
+                    {% if complaint["feedback_rating"] %}
+                        <div class="feedback-box">
+                            <strong>Your feedback:</strong>
+                            <p>Rating: {{ "★" * complaint["feedback_rating"] }}{{ "☆" * (5 - complaint["feedback_rating"]) }} ({{ complaint["feedback_rating"] }}/5)</p>
+                            <p>{{ complaint["feedback_message"] }}</p>
+                            <p class="feedback-note">Feedback submitted: {{ complaint["feedback_created_at"] }}</p>
+                        </div>
+                    {% elif complaint["status"] == "Resolved" %}
+                        <form class="feedback-box" method="POST" action="{{ url_for('submit_feedback', complaint_id=complaint['id']) }}">
+                            <h3>⭐ Share Your Feedback</h3>
+                            <p class="feedback-note">Your complaint is resolved. Please rate how it was handled.</p>
+                            <label for="rating-{{ complaint['id'] }}">Rating</label>
+                            <select id="rating-{{ complaint['id'] }}" name="rating" required>
+                                <option value="">Choose a rating</option>
+                                <option value="5">★★★★★ - Excellent</option>
+                                <option value="4">★★★★☆ - Good</option>
+                                <option value="3">★★★☆☆ - Average</option>
+                                <option value="2">★★☆☆☆ - Poor</option>
+                                <option value="1">★☆☆☆☆ - Very poor</option>
+                            </select>
+                            <label for="message-{{ complaint['id'] }}">Comments</label>
+                            <textarea id="message-{{ complaint['id'] }}" name="message" rows="3" placeholder="Tell us about your experience..." required></textarea>
+                            <button type="submit">Submit Feedback</button>
+                        </form>
+                    {% endif %}
 
                 </div>
 
